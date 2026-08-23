@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram User Profile</title>
+    <!-- ភ្ជាប់ Telegram Script ដើម -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 30px 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            background-color: #0088cc;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+            box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);
+        }
+
+        h2 {
+            color: #222222;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        p.username {
+            color: #0088cc;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .welcome-box {
+            background-color: #f0f8ff;
+            border: 1px solid #d0e7ff;
+            border-radius: 12px;
+            padding: 15px;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- កន្លែងបង្ហាញ រូបតំណាង (អក្សរដើម) និង ឈ្មោះ Telegram -->
+        <div class="avatar" id="avatar-letter">?</div>
+        <h2 id="user-name">កំពុងទាញយកឈ្មោះ...</h2>
+        <p class="username" id="user-handle">@username</p>
+
+        <div class="welcome-box">
+            សូមស្វាគមន៍មកកាន់ប្រព័ន្ធរបស់យើង! ឈ្មោះរបស់អ្នកត្រូវ បានទាញយកដោយស្វ័យប្រវត្តិ។
+        </div>
+    </div>
+
+    <script>
+        // ១. ចាប់យក Telegram Web App API
+        const tg = window.Telegram.WebApp;
+        
+        // ពង្រីកអេក្រង់ Mini App ឲ្យពេញទូរស័ព្ទ
+        tg.expand();
+
+        // ២. ទាញយកទិន្នន័យ Profile របស់ User
+        const user = tg.initDataUnsafe?.user;
+
+        // ៣. បង្ហាញឈ្មោះ និង Username លើអេក្រង់
+        if (user) {
+            // បូកបញ្ចូល First Name និង Last Name (បើមាន)
+            const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
+            
+            // ដាក់ឈ្មោះចូលក្នុង Element
+            document.getElementById('user-name').innerText = fullName;
+            
+            // បង្ហាញ Username (បើគេមិនបានកំណត់ Username ទេ ឲ្យលាក់)
+            if (user.username) {
+                document.getElementById('user-handle').innerText = `@${user.username}`;
+            } else {
+                document.getElementById('user-handle').style.display = 'none';
+            }
+
+            // យកអក្សរដំបូងនៃឈ្មោះមកធ្វើជា Avatar
+            document.getElementById('avatar-letter').innerText = user.first_name.charAt(0).toUpperCase();
+
+        } else {
+            // បើបើកលើ Browser ធម្មតា (ក្រៅ Telegram)
+            document.getElementById('user-name').innerText = "សូមបើកតាម Telegram Bot!";
+            document.getElementById('user-handle').innerText = "@not_found";
+        }
+    </script>
+</body>
+</html>
