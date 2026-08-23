@@ -52,13 +52,25 @@
         h2 {
             color: #222222;
             font-size: 22px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         p.username {
             color: #0088cc;
             font-size: 15px;
             font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        /* ស្ទីលសម្រាប់បង្ហាញ ID */
+        .user-id {
+            background-color: #eef2f5;
+            color: #555555;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
             margin-bottom: 20px;
         }
 
@@ -76,48 +88,47 @@
 <body>
 
     <div class="card">
-        <!-- កន្លែងបង្ហាញ រូបតំណាង (អក្សរដើម) និង ឈ្មោះ Telegram -->
         <div class="avatar" id="avatar-letter">?</div>
         <h2 id="user-name">កំពុងទាញយកឈ្មោះ...</h2>
         <p class="username" id="user-handle">@username</p>
+        
+        <!-- កន្លែងបង្ហាញ ID -->
+        <div class="user-id" id="user-id">ID: -------</div>
 
         <div class="welcome-box">
-            សូមស្វាគមន៍មកកាន់ប្រព័ន្ធរបស់យើង! ឈ្មោះរបស់អ្នកត្រូវ បានទាញយកដោយស្វ័យប្រវត្តិ។
+            សូមស្វាគមន៍មកកាន់ប្រព័ន្ធរបស់យើង! ឈ្មោះ និង ID របស់អ្នកត្រូវបានទាញយកដោយស្វ័យប្រវត្តិ។
         </div>
     </div>
 
     <script>
-        // ១. ចាប់យក Telegram Web App API
         const tg = window.Telegram.WebApp;
-        
-        // ពង្រីកអេក្រង់ Mini App ឲ្យពេញទូរស័ព្ទ
         tg.expand();
 
-        // ២. ទាញយកទិន្នន័យ Profile របស់ User
         const user = tg.initDataUnsafe?.user;
 
-        // ៣. បង្ហាញឈ្មោះ និង Username លើអេក្រង់
         if (user) {
-            // បូកបញ្ចូល First Name និង Last Name (បើមាន)
             const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
             
-            // ដាក់ឈ្មោះចូលក្នុង Element
+            // ១. បង្ហាញឈ្មោះ
             document.getElementById('user-name').innerText = fullName;
             
-            // បង្ហាញ Username (បើគេមិនបានកំណត់ Username ទេ ឲ្យលាក់)
+            // ២. បង្ហាញ Username
             if (user.username) {
                 document.getElementById('user-handle').innerText = `@${user.username}`;
             } else {
                 document.getElementById('user-handle').style.display = 'none';
             }
 
-            // យកអក្សរដំបូងនៃឈ្មោះមកធ្វើជា Avatar
+            // ៣. បង្ហាញ Telegram ID (ប្រើ user.id)
+            document.getElementById('user-id').innerText = `ID: ${user.id}`;
+
+            // ៤. បង្ហាញអក្សរដំបូង
             document.getElementById('avatar-letter').innerText = user.first_name.charAt(0).toUpperCase();
 
         } else {
-            // បើបើកលើ Browser ធម្មតា (ក្រៅ Telegram)
             document.getElementById('user-name').innerText = "សូមបើកតាម Telegram Bot!";
             document.getElementById('user-handle').innerText = "@not_found";
+            document.getElementById('user-id').innerText = "ID: Unknown";
         }
     </script>
 </body>
